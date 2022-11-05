@@ -1,28 +1,42 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-
-interface StoreContext {
-  store: unknown,
-  updateStore: (newData: Object) => void
-}
+import { createContext, useCallback, useContext, useRef } from "react";
+import { IListener, StoreContext, StoreProviderProps} from './types/context'
 
 const Store = createContext({} as StoreContext)
 
-interface StoreProviderProps {
-  children: ReactNode
-}
-
 export const StoreProvider = ({ children }: StoreProviderProps) => {
-  const [store, setStore] = useState({
+  const listeners = useRef({}) as unknown as IListener
+
+  const store = useRef({
     counter: 0,
     user: null,
   })
 
-  const updateStore = (newData: Object) => {
-    setStore(prevState => ({ ...prevState, ...newData }))
+  const getStore = useCallback(() => {
+    return store.current
+  }, [])
+
+  const setStore = (newData: Object | Function) => {
+    const data = typeof newData === 'function' ? newData(store.current) : newData
+
+    store.current = {
+      ...store.current, ...data
+    }
+
+    Object.values(listeners.current).forEach(listener => {
+      listener(store.current)
+    })
   }
 
+  const registerListener = useCallback((listenerId: number, fn: Function) => {
+    listeners.current[listenerId] = fn
+  }, [])
+
+  const unregisterListener = useCallback((listenerId: number) => {
+    delete listeners.current[listenerId]
+  }, [])
+
   return (
-    <Store.Provider value={{ store, updateStore }}>
+    <Store.Provider value={{ store, getStore, setStore, registerListener, unregisterListener }}>
       {children}
     </Store.Provider>
   )
