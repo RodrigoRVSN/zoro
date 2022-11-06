@@ -6,7 +6,8 @@
 
 ## What strategy is being use instead a state?
 
-- useRef
+- The context is using a `useRef` to store and change the value in provider, and the `useSelector` hook in `lib/useSelector.tsx` is using a `useState` being instancied in each component with the respective value being used in that component, managed by the `listenerId`, using and updating the values from the `useRef` of the Context Api. 
+- This strategy is based in Redux and Zustand.
 
 ___
 ## 💻 Prerequisites
