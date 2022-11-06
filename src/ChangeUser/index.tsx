@@ -1,15 +1,17 @@
-import { useStore } from "../../lib/context"
+import { useStore } from "../../lib"
+import { useSelector } from "../../lib/useSelector"
 
 export const ChangeUser = () => {
   console.log('ChangeUser render - user info')
 
-  const { store, updateStore } = useStore()
+  const { setStore } = useStore()
+  const age = useSelector(value => value.user.age)
 
   const handleChangeUser = () => {
-    updateStore({ user: { age: Math.random() } })
+    setStore({ user: { age: Math.random() } })
   }
   
   return (
-    <button onClick={handleChangeUser}>changing user, age: {store.user?.age}</button>
+    <button onClick={handleChangeUser}>changing user, age: {age}</button>
   )
 }

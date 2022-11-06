@@ -1,4 +1,3 @@
-export type GetterParams = (store: {
-  counter: number;
-  user: null;
-}) => any
+import { ReactNode } from "react";
+
+export type GetterParams<T> = (store: T) => ReactNode

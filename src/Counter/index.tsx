@@ -1,10 +1,11 @@
-import { useStore } from "../../lib/context"
+import { useStore } from "../../lib"
 import { useSelector } from "../../lib/useSelector"
 
 export const Counter = () => {
   console.log('Counter render - counter info')
 
   const { setStore } = useStore()
+
   const counter = useSelector(value => value.counter)
 
   const handleIncrement = () => {

@@ -1,10 +1,10 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { StoreProvider } from '../lib';
 import App from './App'
-import { StoreProvider } from '../lib/context'
+import { store } from './store'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <StoreProvider>
+  <StoreProvider initialData={store}>
     <App />
   </StoreProvider>
 )

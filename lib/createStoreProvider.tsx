@@ -1,21 +1,15 @@
-import { createContext, useCallback, useContext, useRef } from "react";
-import { IListener, StoreContext, StoreProviderProps} from './types/context'
+import { useCallback, useRef, Context, ReactNode } from "react";
+import { IListener, StoreContextType} from './types/context'
 
-const Store = createContext({} as StoreContext)
-
-export const StoreProvider = ({ children }: StoreProviderProps) => {
+export function createStoreProvider<T>(Context: Context<StoreContextType<T>>, initialData: T, { children }: {children: ReactNode}) {
   const listeners = useRef({}) as unknown as IListener
-
-  const store = useRef({
-    counter: 0,
-    user: null,
-  })
+  const store = useRef(initialData)
 
   const getStore = useCallback(() => {
     return store.current
   }, [])
 
-  const setStore = (newData: Object | Function) => {
+  const setStore = (newData: T) => {
     const data = typeof newData === 'function' ? newData(store.current) : newData
 
     store.current = {
@@ -36,12 +30,8 @@ export const StoreProvider = ({ children }: StoreProviderProps) => {
   }, [])
 
   return (
-    <Store.Provider value={{ store, getStore, setStore, registerListener, unregisterListener }}>
+    <Context.Provider value={{ store, getStore, setStore, registerListener, unregisterListener }}>
       {children}
-    </Store.Provider>
+    </Context.Provider>
   )
-}
-
-export const useStore = () => {
-  return useContext(Store)
 }
